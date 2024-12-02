@@ -1,0 +1,89 @@
+@
+\section*{Exempel med noweb}
+Detta är en fil i övning 3 DD1385
+
+<<ButtonDisplay.java>>=
+<<imports>>
+
+public class ButtonDisplay extends JFrame implements ActionListener {
+
+    JPanel buttonPanel;
+    JButton[] buttons;
+    JTextField display;
+    String buttonText = "123456789*0#";
+    StringBuilder buffert;
+
+    <<constructor>>
+    
+    <<actionPerformed>>
+   
+    <<main>>
+}
+
+@
+\subsection*{imports}
+Här har vi alla imports
+<<imports>>=
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+
+@
+\subsection*{Här har vi constructorn}
+Vi kan lägga till lite latex-saker, till exempel $\sum_{k=0}^{\infty}r^k=\frac{1}{1-r}$
+och 
+\[\int_{-\infty}^\infty e^{-x^2}\]
+<<constructor>>=
+ButtonDisplay() {
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setSize(300, 450);
+    setLayout(new BorderLayout());
+
+    buttons = new JButton[12];
+    buffert = new StringBuilder();
+
+    display = new JTextField("Test");
+    display.setEditable(false);
+
+    <<buttonHandler>>
+
+    add(buttonPanel, BorderLayout.CENTER);
+    add(display, BorderLayout.SOUTH);
+
+    setVisible(true);
+}
+
+<<buttonHandler>>=
+buttonPanel = new JPanel();
+buttonPanel.setSize(300,400);
+buttonPanel.setLayout(new GridLayout(4,3));
+
+for (int i = 0; i < buttonText.length(); i++) {
+    buttons[i] = new JButton(buttonText.substring(i, i+1));
+    buttons[i].addActionListener(this);
+    buttonPanel.add(buttons[i]);
+}
+
+
+<<actionPerformed>>=
+@Override
+public void actionPerformed(ActionEvent e){
+    String event = e.getActionCommand();
+    
+    if (event.equals("*")) {
+        buffert = new StringBuilder();
+    } else if (event.equals("#")) {
+        buffert.deleteCharAt(buffert.length()-1);
+    } else {
+        buffert.append(event);
+    }
+
+    display.setText(buffert.toString());
+}
+
+
+<<main>>=
+public static void main(String[] args) {
+    new ButtonDisplay();
+}
